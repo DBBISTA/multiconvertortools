@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIP Calculator - Multi-Tools Hub</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .calculator-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .calculate-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .calculate-btn:hover {
+            background-color: #ff6666;
+        }
+
+        .result-container {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .result-table th,
+        .result-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .result-table th {
+            background-color: var(--light-gray);
+            font-weight: bold;
+        }
+
+        .result-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .emoji {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .summary-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .summary-box {
+            background-color: var(--light-gray);
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .summary-box h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .summary-box .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .error-message {
+            color: #ff4444;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header will be loaded dynamically -->
+    <div id="header-placeholder"></div>
+
+    <!-- Top Ad Section -->
+    <div class="ad-section top-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="9294720879"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <main>
+        <div class="calculator-container">
+            <h2><i class="fas fa-chart-line"></i> SIP Calculator</h2>
+            <p>Calculate your Systematic Investment Plan (SIP) returns with our easy-to-use calculator.</p>
+
+            <form id="sip-form">
+                <div class="input-group">
+                    <label for="monthly-investment">Monthly Investment (₹)</label>
+                    <input type="number" id="monthly-investment" required min="500" step="100" placeholder="Enter monthly investment amount">
+                </div>
+
+                <div class="input-group">
+                    <label for="interest-rate">Expected Annual Return (%)</label>
+                    <input type="number" id="interest-rate" required min="0" step="0.1" placeholder="Enter expected annual return">
+                </div>
+
+                <div class="input-group">
+                    <label for="time-period">Investment Period (Years)</label>
+                    <input type="number" id="time-period" required min="1" max="30" placeholder="Enter investment period">
+                </div>
+
+                <button type="submit" class="calculate-btn">
+                    <i class="fas fa-calculator"></i> Calculate SIP Returns
+                </button>
+            </form>
+
+            <div class="result-container" id="result-container">
+                <h3>SIP Calculation Results</h3>
+                
+                <div class="summary-container">
+                    <div class="summary-box">
+                        <h4><span class="emoji">💰</span> Total Investment</h4>
+                        <div class="value" id="total-investment">₹0</div>
+                    </div>
+                    <div class="summary-box">
+                        <h4><span class="emoji">💵</span> Total Returns</h4>
+                        <div class="value" id="total-returns">₹0</div>
+                    </div>
+                    <div class="summary-box">
+                        <h4><span class="emoji">💎</span> Maturity Value</h4>
+                        <div class="value" id="maturity-value">₹0</div>
+                    </div>
+                </div>
+
+                <table class="result-table">
+                    <tr>
+                        <th>Year</th>
+                        <th>Investment</th>
+                        <th>Interest</th>
+                        <th>Balance</th>
+                    </tr>
+                    <tbody id="yearly-breakdown"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Ad Section -->
+    <div class="ad-section bottom-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="2914813653"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('sip-form');
+            const resultContainer = document.getElementById('result-container');
+            const yearlyBreakdown = document.getElementById('yearly-breakdown');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const monthlyInvestment = parseFloat(document.getElementById('monthly-investment').value);
+                const annualRate = parseFloat(document.getElementById('interest-rate').value);
+                const years = parseInt(document.getElementById('time-period').value);
+
+                // Calculate monthly rate
+                const monthlyRate = annualRate / 12 / 100;
+
+                // Calculate total investment
+                const totalInvestment = monthlyInvestment * 12 * years;
+
+                // Calculate maturity value using SIP formula
+                const maturityValue = monthlyInvestment * ((Math.pow(1 + monthlyRate, 12 * years) - 1) / monthlyRate) * (1 + monthlyRate);
+
+                // Calculate total returns
+                const totalReturns = maturityValue - totalInvestment;
+
+                // Display results
+                document.getElementById('total-investment').textContent = `₹${utils.formatNumber(totalInvestment.toFixed(2))}`;
+                document.getElementById('total-returns').textContent = `₹${utils.formatNumber(totalReturns.toFixed(2))}`;
+                document.getElementById('maturity-value').textContent = `₹${utils.formatNumber(maturityValue.toFixed(2))}`;
+
+                // Generate yearly breakdown
+                yearlyBreakdown.innerHTML = '';
+                let balance = 0;
+                let yearlyInvestment = 0;
+
+                for (let year = 1; year <= years; year++) {
+                    yearlyInvestment = monthlyInvestment * 12;
+                    const interest = balance * (annualRate / 100);
+                    balance = (balance + yearlyInvestment) * (1 + annualRate / 100);
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${year}</td>
+                        <td>₹${utils.formatNumber(yearlyInvestment.toFixed(2))}</td>
+                        <td>₹${utils.formatNumber(interest.toFixed(2))}</td>
+                        <td>₹${utils.formatNumber(balance.toFixed(2))}</td>
+                    `;
+                    yearlyBreakdown.appendChild(row);
+                }
+
+                // Show results
+                resultContainer.classList.add('show');
+
+                // Show success notification
+                utils.showNotification('SIP calculation completed successfully! 🎉', 'success');
+            });
+
+            // Validate numeric inputs
+            const numericInputs = form.querySelectorAll('input[type="number"]');
+            numericInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    utils.validateNumericInput(this);
+                });
+            });
+        });
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9539120037372862" crossorigin="anonymous"></script>
+</body>
+</html> 

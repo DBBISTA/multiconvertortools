@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter - Multi-Tools Hub</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .converter-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--light-gray);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .upload-area p {
+            margin: 0;
+            color: var(--dark-gray);
+        }
+
+        .conversion-options {
+            margin-bottom: 2rem;
+        }
+
+        .option-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .option-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .format-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .preview-box {
+            text-align: center;
+        }
+
+        .preview-box img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .preview-box .file-info {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .convert-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .convert-btn:hover {
+            background-color: #ff6666;
+        }
+
+        .convert-btn:disabled {
+            background-color: var(--light-gray);
+            cursor: not-allowed;
+        }
+
+        .download-btn {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header will be loaded dynamically -->
+    <div id="header-placeholder"></div>
+
+    <!-- Top Ad Section -->
+    <div class="ad-section top-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="9294720879"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <main>
+        <div class="converter-container">
+            <h2><i class="fas fa-exchange-alt"></i> Image Converter</h2>
+            <p>Convert your images to different formats. Drag and drop or click to upload.</p>
+
+            <div class="upload-area" id="upload-area">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drag and drop your image here or click to browse</p>
+                <input type="file" id="file-input" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="conversion-options">
+                <div class="option-group">
+                    <label for="format">Convert to Format</label>
+                    <select id="format" class="format-select">
+                        <option value="image/jpeg">JPEG</option>
+                        <option value="image/png">PNG</option>
+                        <option value="image/webp">WebP</option>
+                        <option value="image/gif">GIF</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="preview-container">
+                <div class="preview-box">
+                    <h3>Original Image</h3>
+                    <img id="original-preview" src="#" alt="Original" style="display: none;">
+                    <div class="file-info" id="original-info"></div>
+                </div>
+                <div class="preview-box">
+                    <h3>Converted Image</h3>
+                    <img id="converted-preview" src="#" alt="Converted" style="display: none;">
+                    <div class="file-info" id="converted-info"></div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner"></i> Converting...
+            </div>
+
+            <button class="convert-btn" id="convert-btn" disabled>
+                <i class="fas fa-exchange-alt"></i> Convert Image
+            </button>
+
+            <button class="download-btn" id="download-btn">
+                <i class="fas fa-download"></i> Download Converted Image
+            </button>
+        </div>
+    </main>
+
+    <!-- Bottom Ad Section -->
+    <div class="ad-section bottom-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="2914813653"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('file-input');
+            const formatSelect = document.getElementById('format');
+            const convertBtn = document.getElementById('convert-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const loading = document.getElementById('loading');
+            const originalPreview = document.getElementById('original-preview');
+            const convertedPreview = document.getElementById('converted-preview');
+            const originalInfo = document.getElementById('original-info');
+            const convertedInfo = document.getElementById('converted-info');
+
+            let originalFile = null;
+
+            // Handle drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--light-gray');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--light-gray');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    handleFile(file);
+                }
+            });
+
+            // Handle click to upload
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    handleFile(file);
+                }
+            });
+
+            // Handle file
+            function handleFile(file) {
+                originalFile = file;
+                const reader = new FileReader();
+                
+                reader.onload = (e) => {
+                    originalPreview.src = e.target.result;
+                    originalPreview.style.display = 'block';
+                    originalInfo.textContent = `Format: ${file.type.split('/')[1].toUpperCase()}, Size: ${formatFileSize(file.size)}`;
+                    convertBtn.disabled = false;
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            // Handle conversion
+            convertBtn.addEventListener('click', () => {
+                if (!originalFile) return;
+
+                loading.style.display = 'block';
+                convertBtn.disabled = true;
+
+                const img = new Image();
+                img.src = originalPreview.src;
+
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    ctx.drawImage(img, 0, 0);
+
+                    const format = formatSelect.value;
+                    const convertedDataUrl = canvas.toDataURL(format);
+
+                    convertedPreview.src = convertedDataUrl;
+                    convertedPreview.style.display = 'block';
+
+                    // Calculate converted size
+                    const base64String = convertedDataUrl.split(',')[1];
+                    const convertedSize = Math.ceil((base64String.length * 3) / 4);
+                    convertedInfo.textContent = `Format: ${format.split('/')[1].toUpperCase()}, Size: ${formatFileSize(convertedSize)}`;
+
+                    loading.style.display = 'none';
+                    convertBtn.disabled = false;
+                    downloadBtn.style.display = 'block';
+
+                    // Show success notification
+                    utils.showNotification('Image converted successfully! 🎉', 'success');
+                };
+            });
+
+            // Handle download
+            downloadBtn.addEventListener('click', () => {
+                const format = formatSelect.value.split('/')[1];
+                const link = document.createElement('a');
+                link.download = `converted_${originalFile.name.split('.')[0]}.${format}`;
+                link.href = convertedPreview.src;
+                link.click();
+            });
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        });
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9539120037372862" crossorigin="anonymous"></script>
+</body>
+</html> 

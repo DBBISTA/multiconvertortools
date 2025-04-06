@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discount Calculator - Multi-Tools Hub</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .calculator-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .input-group .range-slider {
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        .input-group .range-values {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .result-container {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--dark-gray);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .savings-highlight {
+            text-align: center;
+            padding: 1rem;
+            margin-top: 1rem;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #ff6666;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            color: white;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .notification.success {
+            background-color: var(--secondary-color);
+        }
+
+        .notification.error {
+            background-color: var(--primary-color);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header will be loaded dynamically -->
+    <div id="header-placeholder"></div>
+
+    <!-- Top Ad Section -->
+    <div class="ad-section top-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="9294720879"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <main>
+        <div class="calculator-container">
+            <h2><i class="fas fa-tags"></i> Discount Calculator</h2>
+            <p>Calculate discounts, final prices, and savings on your purchases.</p>
+
+            <div class="input-group">
+                <label for="original-price">Original Price</label>
+                <input type="number" id="original-price" placeholder="Enter original price" min="0" step="0.01">
+                <input type="range" id="original-price-slider" class="range-slider" min="0" max="10000" step="100">
+                <div class="range-values">
+                    <span>₹0</span>
+                    <span>₹10,000</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="discount-percentage">Discount Percentage</label>
+                <input type="number" id="discount-percentage" placeholder="Enter discount percentage" min="0" max="100" step="1">
+                <input type="range" id="discount-percentage-slider" class="range-slider" min="0" max="100" step="1">
+                <div class="range-values">
+                    <span>0%</span>
+                    <span>100%</span>
+                </div>
+            </div>
+
+            <div class="result-container">
+                <div class="result-item">
+                    <span class="result-label">Discount Amount</span>
+                    <span class="result-value" id="discount-amount">₹0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Final Price</span>
+                    <span class="result-value" id="final-price">₹0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">You Save</span>
+                    <span class="result-value" id="total-savings">₹0</span>
+                </div>
+            </div>
+
+            <div id="savings-highlight" class="savings-highlight"></div>
+
+            <button class="btn btn-primary" id="calculate-btn">
+                <i class="fas fa-calculator"></i> Calculate Discount
+            </button>
+        </div>
+    </main>
+
+    <!-- Bottom Ad Section -->
+    <div class="ad-section bottom-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="2914813653"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../script.js"></script>
+    <script src="../tools.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const originalPriceInput = document.getElementById('original-price');
+            const discountPercentageInput = document.getElementById('discount-percentage');
+            const originalPriceSlider = document.getElementById('original-price-slider');
+            const discountPercentageSlider = document.getElementById('discount-percentage-slider');
+            const calculateBtn = document.getElementById('calculate-btn');
+
+            // Sync inputs with sliders
+            originalPriceInput.addEventListener('input', function() {
+                originalPriceSlider.value = this.value;
+            });
+
+            discountPercentageInput.addEventListener('input', function() {
+                discountPercentageSlider.value = this.value;
+            });
+
+            originalPriceSlider.addEventListener('input', function() {
+                originalPriceInput.value = this.value;
+            });
+
+            discountPercentageSlider.addEventListener('input', function() {
+                discountPercentageInput.value = this.value;
+            });
+
+            function formatCurrency(amount) {
+                return '₹' + amount.toLocaleString('en-IN', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                });
+            }
+
+            function updateResults() {
+                const originalPrice = parseFloat(originalPriceInput.value);
+                const discountPercentage = parseFloat(discountPercentageInput.value);
+
+                if (originalPrice && discountPercentage) {
+                    const results = tools.calculateDiscount(originalPrice, discountPercentage);
+                    
+                    document.getElementById('discount-amount').textContent = formatCurrency(results.discountAmount);
+                    document.getElementById('final-price').textContent = formatCurrency(results.finalPrice);
+                    document.getElementById('total-savings').textContent = formatCurrency(results.totalSavings);
+
+                    const savingsHighlight = document.getElementById('savings-highlight');
+                    savingsHighlight.textContent = `You save ${formatCurrency(results.totalSavings)} (${discountPercentage}% off)!`;
+                }
+            }
+
+            // Update results when inputs change
+            originalPriceInput.addEventListener('input', updateResults);
+            discountPercentageInput.addEventListener('input', updateResults);
+
+            // Calculate button click
+            calculateBtn.addEventListener('click', function() {
+                if (!originalPriceInput.value || !discountPercentageInput.value) {
+                    tools.utils.showNotification('Please enter both original price and discount percentage', 'error');
+                    return;
+                }
+                updateResults();
+                tools.utils.showNotification('Discount calculated successfully!', 'success');
+            });
+        });
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9539120037372862" crossorigin="anonymous"></script>
+</body>
+</html> 

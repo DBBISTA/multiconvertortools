@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compound Interest Calculator - Multi-Tools Hub</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .calculator-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .calculate-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .calculate-btn:hover {
+            background-color: #ff6666;
+        }
+
+        .result-container {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .result-table th,
+        .result-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .result-table th {
+            background-color: var(--light-gray);
+            font-weight: bold;
+        }
+
+        .result-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .emoji {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .summary-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .summary-box {
+            background-color: var(--light-gray);
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .summary-box h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .summary-box .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .error-message {
+            color: #ff4444;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .compound-frequency {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .frequency-option {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .frequency-option:hover {
+            background-color: var(--light-gray);
+        }
+
+        .frequency-option.selected {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header will be loaded dynamically -->
+    <div id="header-placeholder"></div>
+
+    <!-- Top Ad Section -->
+    <div class="ad-section top-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="9294720879"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <main>
+        <div class="calculator-container">
+            <h2><i class="fas fa-percentage"></i> Compound Interest Calculator</h2>
+            <p>Calculate your compound interest returns with our easy-to-use calculator.</p>
+
+            <form id="compound-form">
+                <div class="input-group">
+                    <label for="principal">Principal Amount (₹)</label>
+                    <input type="number" id="principal" required min="1000" step="1000" placeholder="Enter principal amount">
+                </div>
+
+                <div class="input-group">
+                    <label for="interest-rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="interest-rate" required min="0" step="0.1" placeholder="Enter annual interest rate">
+                </div>
+
+                <div class="input-group">
+                    <label for="time-period">Time Period (Years)</label>
+                    <input type="number" id="time-period" required min="1" max="30" placeholder="Enter time period">
+                </div>
+
+                <div class="input-group">
+                    <label>Compound Frequency</label>
+                    <div class="compound-frequency">
+                        <div class="frequency-option" data-frequency="1">Annually</div>
+                        <div class="frequency-option" data-frequency="2">Semi-Annually</div>
+                        <div class="frequency-option" data-frequency="4">Quarterly</div>
+                        <div class="frequency-option" data-frequency="12">Monthly</div>
+                    </div>
+                    <input type="hidden" id="frequency" value="1">
+                </div>
+
+                <button type="submit" class="calculate-btn">
+                    <i class="fas fa-calculator"></i> Calculate Returns
+                </button>
+            </form>
+
+            <div class="result-container" id="result-container">
+                <h3>Compound Interest Results</h3>
+                
+                <div class="summary-container">
+                    <div class="summary-box">
+                        <h4><span class="emoji">💰</span> Principal Amount</h4>
+                        <div class="value" id="principal-amount">₹0</div>
+                    </div>
+                    <div class="summary-box">
+                        <h4><span class="emoji">💵</span> Total Interest</h4>
+                        <div class="value" id="total-interest">₹0</div>
+                    </div>
+                    <div class="summary-box">
+                        <h4><span class="emoji">💎</span> Maturity Value</h4>
+                        <div class="value" id="maturity-value">₹0</div>
+                    </div>
+                </div>
+
+                <table class="result-table">
+                    <tr>
+                        <th>Year</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Balance</th>
+                    </tr>
+                    <tbody id="yearly-breakdown"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Ad Section -->
+    <div class="ad-section bottom-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="2914813653"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('compound-form');
+            const resultContainer = document.getElementById('result-container');
+            const yearlyBreakdown = document.getElementById('yearly-breakdown');
+            const frequencyOptions = document.querySelectorAll('.frequency-option');
+            const frequencyInput = document.getElementById('frequency');
+
+            // Handle frequency selection
+            frequencyOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    frequencyOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    frequencyInput.value = this.dataset.frequency;
+                });
+            });
+
+            // Select annual by default
+            frequencyOptions[0].classList.add('selected');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const principal = parseFloat(document.getElementById('principal').value);
+                const annualRate = parseFloat(document.getElementById('interest-rate').value);
+                const years = parseInt(document.getElementById('time-period').value);
+                const frequency = parseInt(frequencyInput.value);
+
+                // Calculate compound interest
+                const ratePerPeriod = annualRate / 100 / frequency;
+                const numberOfPeriods = years * frequency;
+                const maturityValue = principal * Math.pow(1 + ratePerPeriod, numberOfPeriods);
+                const totalInterest = maturityValue - principal;
+
+                // Display results
+                document.getElementById('principal-amount').textContent = `₹${utils.formatNumber(principal.toFixed(2))}`;
+                document.getElementById('total-interest').textContent = `₹${utils.formatNumber(totalInterest.toFixed(2))}`;
+                document.getElementById('maturity-value').textContent = `₹${utils.formatNumber(maturityValue.toFixed(2))}`;
+
+                // Generate yearly breakdown
+                yearlyBreakdown.innerHTML = '';
+                let balance = principal;
+
+                for (let year = 1; year <= years; year++) {
+                    const periodsInYear = frequency;
+                    const interest = balance * (annualRate / 100);
+                    balance = balance * (1 + annualRate / 100);
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${year}</td>
+                        <td>₹${utils.formatNumber(principal.toFixed(2))}</td>
+                        <td>₹${utils.formatNumber(interest.toFixed(2))}</td>
+                        <td>₹${utils.formatNumber(balance.toFixed(2))}</td>
+                    `;
+                    yearlyBreakdown.appendChild(row);
+                }
+
+                // Show results
+                resultContainer.classList.add('show');
+
+                // Show success notification
+                utils.showNotification('Compound interest calculation completed successfully! 🎉', 'success');
+            });
+
+            // Validate numeric inputs
+            const numericInputs = form.querySelectorAll('input[type="number"]');
+            numericInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    utils.validateNumericInput(this);
+                });
+            });
+        });
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9539120037372862" crossorigin="anonymous"></script>
+</body>
+</html> 

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator - Multi-Tools Hub</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .calculator-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .result-container {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--dark-gray);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #ff6666;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            color: white;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .notification.success {
+            background-color: var(--secondary-color);
+        }
+
+        .notification.error {
+            background-color: var(--primary-color);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header will be loaded dynamically -->
+    <div id="header-placeholder"></div>
+
+    <!-- Top Ad Section -->
+    <div class="ad-section top-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="9294720879"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <main>
+        <div class="calculator-container">
+            <h2><i class="fas fa-birthday-cake"></i> Age Calculator</h2>
+            <p>Calculate your exact age and find out interesting facts about your life journey!</p>
+
+            <div class="input-group">
+                <label for="birthdate">Date of Birth</label>
+                <input type="date" id="birthdate">
+            </div>
+
+            <div class="result-container">
+                <div class="result-item">
+                    <span class="result-label">Years</span>
+                    <span class="result-value" id="years">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Months</span>
+                    <span class="result-value" id="months">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Days</span>
+                    <span class="result-value" id="days">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Days</span>
+                    <span class="result-value" id="total-days">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Next Birthday</span>
+                    <span class="result-value" id="next-birthday">-</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="calculate-btn">
+                <i class="fas fa-calculator"></i> Calculate Age
+            </button>
+        </div>
+    </main>
+
+    <!-- Bottom Ad Section -->
+    <div class="ad-section bottom-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="2914813653"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../script.js"></script>
+    <script src="../tools.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const birthdateInput = document.getElementById('birthdate');
+            const calculateBtn = document.getElementById('calculate-btn');
+
+            function updateResults() {
+                const birthdate = birthdateInput.value;
+                if (birthdate) {
+                    const results = tools.calculateAge(birthdate);
+                    
+                    document.getElementById('years').textContent = results.years;
+                    document.getElementById('months').textContent = results.months;
+                    document.getElementById('days').textContent = results.days;
+                    document.getElementById('total-days').textContent = results.totalDays;
+                    document.getElementById('next-birthday').textContent = results.nextBirthday;
+                }
+            }
+
+            // Update results when birthdate changes
+            birthdateInput.addEventListener('change', updateResults);
+
+            // Calculate button click
+            calculateBtn.addEventListener('click', function() {
+                if (!birthdateInput.value) {
+                    tools.utils.showNotification('Please enter your date of birth', 'error');
+                    return;
+                }
+                updateResults();
+                tools.utils.showNotification('Age calculated successfully!', 'success');
+            });
+        });
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9539120037372862" crossorigin="anonymous"></script>
+</body>
+</html> 

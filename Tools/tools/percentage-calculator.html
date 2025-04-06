@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percentage Calculator - Multi-Tools Hub</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .calculator-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .result-container {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--dark-gray);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #ff6666;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            color: white;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .notification.success {
+            background-color: var(--secondary-color);
+        }
+
+        .notification.error {
+            background-color: var(--primary-color);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header will be loaded dynamically -->
+    <div id="header-placeholder"></div>
+
+    <!-- Top Ad Section -->
+    <div class="ad-section top-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="9294720879"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <main>
+        <div class="calculator-container">
+            <h2><i class="fas fa-percent"></i> Percentage Calculator</h2>
+            <p>Calculate percentages, increases, decreases, and more with this easy-to-use calculator.</p>
+
+            <div class="input-group">
+                <label for="value">Value</label>
+                <input type="number" id="value" placeholder="Enter a value" step="any">
+            </div>
+
+            <div class="input-group">
+                <label for="percentage">Percentage</label>
+                <input type="number" id="percentage" placeholder="Enter percentage" step="any">
+            </div>
+
+            <div class="result-container">
+                <div class="result-item">
+                    <span class="result-label">Percentage of Value</span>
+                    <span class="result-value" id="percentage-of-value">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Value Increased By</span>
+                    <span class="result-value" id="value-increased">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Value Decreased By</span>
+                    <span class="result-value" id="value-decreased">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Final Value After Increase</span>
+                    <span class="result-value" id="final-value-increase">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Final Value After Decrease</span>
+                    <span class="result-value" id="final-value-decrease">0</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="calculate-btn">
+                <i class="fas fa-calculator"></i> Calculate
+            </button>
+        </div>
+    </main>
+
+    <!-- Bottom Ad Section -->
+    <div class="ad-section bottom-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9539120037372862"
+             data-ad-slot="2914813653"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../script.js"></script>
+    <script src="../tools.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const valueInput = document.getElementById('value');
+            const percentageInput = document.getElementById('percentage');
+            const calculateBtn = document.getElementById('calculate-btn');
+
+            function updateResults() {
+                const value = parseFloat(valueInput.value) || 0;
+                const percentage = parseFloat(percentageInput.value) || 0;
+
+                if (value && percentage) {
+                    const results = tools.calculatePercentage(value, percentage);
+                    
+                    document.getElementById('percentage-of-value').textContent = results.percentageOfValue.toFixed(2);
+                    document.getElementById('value-increased').textContent = results.valueIncreased.toFixed(2);
+                    document.getElementById('value-decreased').textContent = results.valueDecreased.toFixed(2);
+                    document.getElementById('final-value-increase').textContent = results.finalValueIncrease.toFixed(2);
+                    document.getElementById('final-value-decrease').textContent = results.finalValueDecrease.toFixed(2);
+                }
+            }
+
+            // Update results when inputs change
+            valueInput.addEventListener('input', updateResults);
+            percentageInput.addEventListener('input', updateResults);
+
+            // Calculate button click
+            calculateBtn.addEventListener('click', function() {
+                if (!valueInput.value || !percentageInput.value) {
+                    tools.utils.showNotification('Please enter both value and percentage', 'error');
+                    return;
+                }
+                updateResults();
+                tools.utils.showNotification('Calculations completed!', 'success');
+            });
+        });
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9539120037372862" crossorigin="anonymous"></script>
+</body>
+</html> 
